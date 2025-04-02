@@ -3,7 +3,8 @@ package com.muhamaddzikri0103.exchango.model
 import com.muhamaddzikri0103.exchango.R
 
 class GBP : Currency(
-    name = "GBP",
+    code = "GBP",
+    name = R.string.gbp_name,
     symbol = "£",
     conversionRates = mapOf(
     "GBP" to 1.00,

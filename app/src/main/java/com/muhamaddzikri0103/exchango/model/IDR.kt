@@ -3,7 +3,8 @@ package com.muhamaddzikri0103.exchango.model
 import com.muhamaddzikri0103.exchango.R
 
 class IDR : Currency(
-    name = "IDR",
+    code = "IDR",
+    name = R.string.idr_name,
     symbol = "Rp",
     conversionRates = mapOf(
         "IDR" to 1.00,

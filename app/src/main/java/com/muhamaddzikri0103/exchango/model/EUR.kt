@@ -3,7 +3,8 @@ package com.muhamaddzikri0103.exchango.model
 import com.muhamaddzikri0103.exchango.R
 
 class EUR : Currency(
-    name = "EUR",
+    code = "EUR",
+    name = R.string.eur_name,
     symbol = "€",
     conversionRates = mapOf(
         "EUR" to 1.00,

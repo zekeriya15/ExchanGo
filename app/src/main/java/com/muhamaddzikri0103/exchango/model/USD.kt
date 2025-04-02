@@ -3,7 +3,8 @@ package com.muhamaddzikri0103.exchango.model
 import com.muhamaddzikri0103.exchango.R
 
 class USD : Currency(
-    name = "USD",
+    code = "USD",
+    name = R.string.usd_name,
     symbol = "$",
     conversionRates = mapOf(
         "USD" to 1.00,

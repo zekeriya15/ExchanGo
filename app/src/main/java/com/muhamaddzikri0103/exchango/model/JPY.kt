@@ -3,7 +3,8 @@ package com.muhamaddzikri0103.exchango.model
 import com.muhamaddzikri0103.exchango.R
 
 class JPY : Currency(
-    name = "JPY",
+    code = "JPY",
+    name = R.string.jpy_name,
     symbol = "¥",
     conversionRates = mapOf(
     "JPY" to 1.00,

@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">ExchanGo</string>
+    <string name="usd">USD - Dollar Amerika</string>
+    <string name="usd_name">Dollar AS</string>
+    <string name="idr">IDR - Rupiah Indonesia</string>
+    <string name="idr_name">Rupiah Indonesia</string>
+    <string name="eur">EUR - Euro</string>
+    <string name="eur_name">Euro</string>
+    <string name="gbp">GBP - Pound Inggris</string>
+    <string name="gbp_name">Pound Inggris</string>
+    <string name="jpy">JYP - Yen Jepang</string>
+    <string name="jpy_name">Yen Jepang</string>
+    <string name="from">Dari</string>
+    <string name="to">Ke</string>
+    <string name="amount">Jumlah</string>
+    <string name="convert">Hitung</string>
+</resources>

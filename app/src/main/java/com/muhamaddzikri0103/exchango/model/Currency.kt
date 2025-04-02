@@ -1,7 +1,8 @@
 package com.muhamaddzikri0103.exchango.model
 
 abstract class Currency(
-    val name: String,
+    val code: String,
+    val name: Int,
     val symbol: String,
     val conversionRates: Map<String, Double>,
     val flagResId: Map<String, Int>
