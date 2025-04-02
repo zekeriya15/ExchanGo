@@ -1,3 +1,11 @@
 <resources>
     <string name="app_name">ExchanGo</string>
+    <string name="usd">USD - US Dollar</string>
+    <string name="idr">IDR - Indonesian Rupiah</string>
+    <string name="eur">EUR - Euro</string>
+    <string name="gbp">GBP - British Pound</string>
+    <string name="jpy">JPY - Japanese Yen</string>
+    <string name="from">From</string>
+    <string name="to">To</string>
+
 </resources>
