@@ -1,7 +1,7 @@
 package com.muhamaddzikri0103.exchango.ui.screen
 
 import android.content.res.Configuration
-import androidx.annotation.DrawableRes
+import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -12,12 +12,15 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Warning
 import androidx.compose.material3.Button
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExposedDropdownMenuBox
 import androidx.compose.material3.ExposedDropdownMenuDefaults
 import androidx.compose.material3.HorizontalDivider
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
@@ -25,23 +28,22 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableDoubleStateOf
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
-import androidx.compose.ui.text.toLowerCase
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.muhamaddzikri0103.exchango.R
-import com.muhamaddzikri0103.exchango.model.Currency
 import com.muhamaddzikri0103.exchango.model.EUR
 import com.muhamaddzikri0103.exchango.model.GBP
 import com.muhamaddzikri0103.exchango.model.IDR
@@ -49,8 +51,6 @@ import com.muhamaddzikri0103.exchango.model.JPY
 import com.muhamaddzikri0103.exchango.model.USD
 import com.muhamaddzikri0103.exchango.ui.theme.ExchanGoTheme
 import java.text.DecimalFormat
-import java.text.NumberFormat
-import java.util.Locale
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -83,19 +83,26 @@ fun ScreenContent(modifier: Modifier = Modifier) {
         "JPY" to JPY()
     )
 
-    var selectedCurrency by remember { mutableStateOf(currencies["USD"] as Currency? ?: USD()) }
+    var selectedCurrency by remember { mutableStateOf(currencies["USD"] ?: USD()) }
     var fromCurrency by remember { mutableStateOf(selectedCurrency.code) }
     var toCurrency by remember { mutableStateOf("EUR") }
 
-    var amount by remember { mutableStateOf("") }
-    var convertedAmount by remember { mutableStateOf(0.0) }
+    var convCurrencyName by remember { mutableStateOf(selectedCurrency.name) }
+    var convFromCurrency by remember { mutableStateOf(fromCurrency) }
+    var convToCurrency by remember { mutableStateOf(toCurrency) }
+    var displayAmount by remember { mutableStateOf("0") }
 
-    var imageId by remember { mutableStateOf(selectedCurrency.flagResId[toCurrency] ?: R.drawable.usd_usd) }
+    var amount by remember { mutableStateOf("") }
+    var convertedAmount by remember { mutableDoubleStateOf(0.0) }
+
+    var amountError by remember { mutableStateOf(false) }
+
+    var imageId by remember { mutableIntStateOf(selectedCurrency.flagResId[toCurrency] ?: R.drawable.usd_eur) }
 
     var isFromExpanded by remember { mutableStateOf(false) }
     var isToExpanded by remember { mutableStateOf(false) }
 
-    val context = LocalContext.current
+//    val context = LocalContext.current
 
     Column(
         modifier = modifier
@@ -107,14 +114,12 @@ fun ScreenContent(modifier: Modifier = Modifier) {
         verticalArrangement = Arrangement.spacedBy(12.dp)
     ) {
         Text(
-            text = "ExchanGo",
-//            modifier = modifier
+            text = stringResource(R.string.title),
+            fontWeight = FontWeight.SemiBold
         )
         Image(
             painter = painterResource(imageId),
-            contentDescription = "usd to eur",
-//            contentScale = ContentScale.Crop,
-//            modifier = Modifier.size(132.dp)
+            contentDescription = stringResource(R.string.curr_flag),
         )
         ExposedDropdownMenuBox(
             expanded = isFromExpanded,
@@ -125,7 +130,7 @@ fun ScreenContent(modifier: Modifier = Modifier) {
                 modifier = Modifier
                     .fillMaxWidth()
                     .menuAnchor(),
-                value = stringResource(getString(fromCurrency)),
+                value = stringResource(getStringResId(fromCurrency)),
                 onValueChange = {},
                 label = { Text(text = stringResource(R.string.from)) },
                 readOnly = true,
@@ -139,15 +144,14 @@ fun ScreenContent(modifier: Modifier = Modifier) {
                 modifier = Modifier.fillMaxWidth()
             ) {
                 currencies.keys.forEach { currencyCode ->
+                    if (currencyCode == toCurrency) return@forEach
                     DropdownMenuItem(
                         modifier = Modifier.fillMaxWidth(),
-                        text = {
-                            Text(text = stringResource(getString(currencyCode)))
-                        },
+                        text = { Text(text = stringResource(getStringResId(currencyCode))) },
                         onClick = {
-                            selectedCurrency = currencies[currencyCode] as Currency? ?: USD()
+                            selectedCurrency = currencies[currencyCode] ?: USD()
                             fromCurrency = currencyCode
-                            imageId = selectedCurrency?.flagResId?.get(toCurrency) ?: R.drawable.usd_usd
+                            imageId = selectedCurrency.flagResId.get(toCurrency) ?: R.drawable.usd_eur
                             isFromExpanded = false
                         },
                         contentPadding = ExposedDropdownMenuDefaults.ItemContentPadding
@@ -164,7 +168,7 @@ fun ScreenContent(modifier: Modifier = Modifier) {
                 modifier = Modifier
                     .fillMaxWidth()
                     .menuAnchor(),
-                value = stringResource(getString(toCurrency)),
+                value = stringResource(getStringResId(toCurrency)),
                 onValueChange = {},
                 label = { Text(text = stringResource(R.string.to)) },
                 readOnly = true,
@@ -178,14 +182,13 @@ fun ScreenContent(modifier: Modifier = Modifier) {
                 modifier = Modifier.fillMaxWidth()
             ) {
                 currencies.keys.forEach { currencyCode ->
+                    if (currencyCode == fromCurrency) return@forEach
                     DropdownMenuItem(
                         modifier = Modifier.fillMaxWidth(),
-                        text = {
-                            Text(text = stringResource(getString(currencyCode)))
-                        },
+                        text = { Text(text = stringResource(getStringResId(currencyCode))) },
                         onClick = {
                             toCurrency = currencyCode
-                            imageId = selectedCurrency?.flagResId?.get(toCurrency) ?: R.drawable.usd_usd
+                            imageId = selectedCurrency.flagResId.get(toCurrency) ?: R.drawable.usd_eur
                             isToExpanded = false
                         }
                     )
@@ -195,9 +198,18 @@ fun ScreenContent(modifier: Modifier = Modifier) {
         }
         OutlinedTextField(
             value = amount,
-            onValueChange = { amount = it },
+            onValueChange = { value ->
+                amount = value
+                amountError = false
+            },
             label = { Text(text = stringResource(R.string.amount)) },
-            leadingIcon = { Text(text = selectedCurrency.symbol) },
+            leadingIcon = { IconPicker(amountError, selectedCurrency.symbol) },
+            supportingText = {
+                if (amountError) {
+                    Text(text = stringResource(R.string.invalid_input))
+                }
+            },
+            isError = amountError,
             singleLine = true,
             keyboardOptions = KeyboardOptions(
                 keyboardType = KeyboardType.Number,
@@ -207,7 +219,20 @@ fun ScreenContent(modifier: Modifier = Modifier) {
         )
         Button(
             onClick = {
-                convertedAmount = selectedCurrency.convert(amount.toDouble(), toCurrency)
+                val amountValue = amount.toDoubleOrNull()
+
+                if (amountValue == null || amount.isEmpty() || amount == "0") {
+                    amountError = true
+                    return@Button
+                }
+
+                convertedAmount = selectedCurrency.convert(amountValue, toCurrency)
+//              displayAmount, convCurrencyName, convFromCurrency, convToCurrency only change when the button
+//              is clicked and not directly using the repr. state cuz repr. state will always recompose the changes
+                displayAmount = amount
+                convCurrencyName = selectedCurrency.name
+                convFromCurrency = fromCurrency
+                convToCurrency = toCurrency
             },
             modifier = Modifier
                 .padding(top = 8.dp)
@@ -217,6 +242,8 @@ fun ScreenContent(modifier: Modifier = Modifier) {
             Text(text = stringResource(R.string.convert))
         }
 
+//        once convertedAmount is not 0.0 the code below it will always be rendered and the changes
+//        to the code below it only happen when convertedAmount recalculated inside the button onClick
         if (convertedAmount != 0.0) {
             HorizontalDivider(
                 modifier = Modifier.padding(vertical = 16.dp),
@@ -226,64 +253,92 @@ fun ScreenContent(modifier: Modifier = Modifier) {
                 modifier = Modifier.fillMaxWidth()
             ) {
                 Text(
-                    text = "${formatNumber(amount.toDouble())} " + stringResource(selectedCurrency.name) + " =",
+                    text = "${formatNumber(displayAmount.toDoubleOrNull() ?: 0.0)} " + stringResource(convCurrencyName) + " =",
                     style = MaterialTheme.typography.titleSmall
                 )
             }
             Column(
                 modifier = Modifier.fillMaxWidth(),
-//                verticalArrangement = Arrangement.Center
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 Text(
-                    text = "${formatNumber(convertedAmount)} " + stringResource(getCurrName(toCurrency)),
+                    text = "${formatNumber(convertedAmount)} " + stringResource(getCurrName(convToCurrency)),
                     style = MaterialTheme.typography.headlineLarge,
                 )
             }
             Column(
-                modifier = Modifier.fillMaxWidth(),
+                modifier = Modifier.fillMaxWidth()
             ) {
-                val otherCurr = currencies[toCurrency]?.conversionRates?.get(fromCurrency)
-                val selectedCurr = currencies[fromCurrency]?.conversionRates?.get(toCurrency)
+                val otherCurr = currencies[convToCurrency]?.conversionRates?.get(convFromCurrency)
+                val selectedCurr = currencies[convFromCurrency]?.conversionRates?.get(convToCurrency)
 
                 Text(
-                    text = "1 $fromCurrency = ${selectedCurr?.let { formatNumber(it) }} $toCurrency",
+                    text = "1 $convFromCurrency = ${selectedCurr?.let { formatNumber(it) }} $convToCurrency",
                     style = MaterialTheme.typography.bodySmall
                 )
                 Text(
-                    text = "1 $toCurrency = ${otherCurr?.let { formatNumber(it) }} $fromCurrency",
+                    text = "1 $convToCurrency = ${otherCurr?.let { formatNumber(it) }} $convFromCurrency",
                     style = MaterialTheme.typography.bodySmall
                 )
             }
+            Button(
+                onClick = {},
+                modifier = Modifier.fillMaxWidth(0.4f).padding(top = 8.dp),
+                contentPadding = PaddingValues(8.dp)
+            ) {
+                Text(text = stringResource(R.string.share))
+            }
+
         }
     }
 }
 
-fun getString(currencyCode: String): Int {
-    return if (currencyCode == "USD") {
-        R.string.usd
-    } else if (currencyCode == "IDR") {
-        R.string.idr
-    } else if (currencyCode == "EUR") {
-        R.string.eur
-    } else if (currencyCode == "GBP") {
-        R.string.gbp
+@Composable
+fun IconPicker(isError: Boolean, unit: String) {
+    if (isError) {
+        Icon(imageVector = Icons.Filled.Warning, contentDescription = unit)
     } else {
-        R.string.jpy
+        Text(text = unit)
+    }
+}
+
+fun getStringResId(currencyCode: String): Int {
+    return when (currencyCode) {
+        "USD" -> {
+            R.string.usd
+        }
+        "IDR" -> {
+            R.string.idr
+        }
+        "EUR" -> {
+            R.string.eur
+        }
+        "GBP" -> {
+            R.string.gbp
+        }
+        else -> {
+            R.string.jpy
+        }
     }
 }
 
 fun getCurrName(currencyCode: String): Int {
-    return if (currencyCode == "USD") {
-        R.string.usd_name
-    } else if (currencyCode == "IDR") {
-        R.string.idr_name
-    } else if (currencyCode == "EUR") {
-        R.string.eur_name
-    } else if (currencyCode == "GBP") {
-        R.string.gbp_name
-    } else {
-        R.string.jpy_name
+    return when (currencyCode) {
+        "USD" -> {
+            R.string.usd_name
+        }
+        "IDR" -> {
+            R.string.idr_name
+        }
+        "EUR" -> {
+            R.string.eur_name
+        }
+        "GBP" -> {
+            R.string.gbp_name
+        }
+        else -> {
+            R.string.jpy_name
+        }
     }
 }
 

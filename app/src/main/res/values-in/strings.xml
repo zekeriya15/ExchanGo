@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">ExchanGo</string>
-    <string name="usd">USD - Dollar Amerika</string>
+    <string name="title">ExchanGo - Konverter Mata Uang</string>
+    <string name="usd">USD - Dollar AS</string>
     <string name="usd_name">Dollar AS</string>
     <string name="idr">IDR - Rupiah Indonesia</string>
     <string name="idr_name">Rupiah Indonesia</string>
@@ -11,8 +12,11 @@
     <string name="gbp_name">Pound Inggris</string>
     <string name="jpy">JYP - Yen Jepang</string>
     <string name="jpy_name">Yen Jepang</string>
+    <string name="curr_flag">Bendera mata uang negara</string>
     <string name="from">Dari</string>
     <string name="to">Ke</string>
     <string name="amount">Jumlah</string>
     <string name="convert">Hitung</string>
+    <string name="share">Bagikan</string>
+    <string name="invalid_input">Jumlah tidak dapat kosong atau 0</string>
 </resources>
