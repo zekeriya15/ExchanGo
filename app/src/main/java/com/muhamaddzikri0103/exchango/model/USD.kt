@@ -2,6 +2,7 @@ package com.muhamaddzikri0103.exchango.model
 
 import com.muhamaddzikri0103.exchango.R
 
+
 class USD : Currency(
     code = "USD",
     name = R.string.usd_name,

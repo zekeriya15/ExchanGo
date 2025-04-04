@@ -33,7 +33,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableDoubleStateOf
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -98,24 +98,28 @@ fun ScreenContent(modifier: Modifier = Modifier) {
         "JPY" to JPY()
     )
 
-    var selectedCurrency by remember { mutableStateOf(currencies["USD"] ?: USD()) }
-    var fromCurrency by remember { mutableStateOf(selectedCurrency.code) }
-    var toCurrency by remember { mutableStateOf("EUR") }
+//    only use rememberSaveable for primitive type, no need to use Parcelable for object
+    var fromCurrency by rememberSaveable { mutableStateOf("USD") }
+    var toCurrency by rememberSaveable { mutableStateOf("EUR") }
 
-    var convCurrencyName by remember { mutableIntStateOf(selectedCurrency.name) }
-    var convFromCurrency by remember { mutableStateOf(fromCurrency) }
-    var convToCurrency by remember { mutableStateOf(toCurrency) }
-    var displayAmount by remember { mutableStateOf("0") }
+//    derived value from state
+    val selectedCurrency = currencies[fromCurrency] ?: USD()
 
-    var amount by remember { mutableStateOf("") }
-    var convertedAmount by remember { mutableDoubleStateOf(0.0) }
+    var convCurrencyName by rememberSaveable { mutableIntStateOf(selectedCurrency.name) }
+    var convFromCurrency by rememberSaveable { mutableStateOf(fromCurrency) }
+    var convToCurrency by rememberSaveable { mutableStateOf(toCurrency) }
+    var displayAmount by rememberSaveable { mutableStateOf("0") }
 
-    var amountError by remember { mutableStateOf(false) }
+    var amount by rememberSaveable { mutableStateOf("") }
+    var convertedAmount by rememberSaveable { mutableDoubleStateOf(0.0) }
 
-    var imageId by remember { mutableIntStateOf(selectedCurrency.flagResId[toCurrency] ?: R.drawable.usd_eur) }
+    var amountError by rememberSaveable { mutableStateOf(false) }
 
-    var isFromExpanded by remember { mutableStateOf(false) }
-    var isToExpanded by remember { mutableStateOf(false) }
+//    derived value from state
+    val imageId = selectedCurrency.flagResId[toCurrency] ?: R.drawable.usd_eur
+
+    var isFromExpanded by rememberSaveable { mutableStateOf(false) }
+    var isToExpanded by rememberSaveable { mutableStateOf(false) }
 
 //    val context = LocalContext.current
 
@@ -164,9 +168,8 @@ fun ScreenContent(modifier: Modifier = Modifier) {
                         modifier = Modifier.fillMaxWidth(),
                         text = { Text(text = stringResource(getStringResId(currencyCode))) },
                         onClick = {
-                            selectedCurrency = currencies[currencyCode] ?: USD()
+//                            no need to assign selectedCurrency back cuz fromCurrency is a state used in selectedCurrency
                             fromCurrency = currencyCode
-                            imageId = selectedCurrency.flagResId.get(toCurrency) ?: R.drawable.usd_eur
                             isFromExpanded = false
                         },
                         contentPadding = ExposedDropdownMenuDefaults.ItemContentPadding
@@ -202,8 +205,8 @@ fun ScreenContent(modifier: Modifier = Modifier) {
                         modifier = Modifier.fillMaxWidth(),
                         text = { Text(text = stringResource(getStringResId(currencyCode))) },
                         onClick = {
+//                            no need to assign imageId back since it derived value from a state
                             toCurrency = currencyCode
-                            imageId = selectedCurrency.flagResId.get(toCurrency) ?: R.drawable.usd_eur
                             isToExpanded = false
                         }
                     )

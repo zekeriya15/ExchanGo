@@ -1,5 +1,6 @@
 package com.muhamaddzikri0103.exchango.model
 
+
 abstract class Currency(
     val code: String,
     val name: Int,
