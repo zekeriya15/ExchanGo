@@ -130,8 +130,7 @@ fun ScreenContent(modifier: Modifier = Modifier) {
         modifier = modifier
             .fillMaxSize()
             .padding(16.dp)
-            .verticalScroll(rememberScrollState())
-        ,
+            .verticalScroll(rememberScrollState()),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.spacedBy(12.dp)
     ) {
@@ -353,41 +352,21 @@ fun IconPicker(isError: Boolean, unit: String) {
 
 private fun getStringResId(currencyCode: String): Int {
     return when (currencyCode) {
-        "USD" -> {
-            R.string.usd
-        }
-        "IDR" -> {
-            R.string.idr
-        }
-        "EUR" -> {
-            R.string.eur
-        }
-        "GBP" -> {
-            R.string.gbp
-        }
-        else -> {
-            R.string.jpy
-        }
+        "USD" -> R.string.usd
+        "IDR" -> R.string.idr
+        "EUR" -> R.string.eur
+        "GBP" -> R.string.gbp
+        else -> R.string.jpy
     }
 }
 
 private fun getCurrName(currencyCode: String): Int {
     return when (currencyCode) {
-        "USD" -> {
-            R.string.usd_name
-        }
-        "IDR" -> {
-            R.string.idr_name
-        }
-        "EUR" -> {
-            R.string.eur_name
-        }
-        "GBP" -> {
-            R.string.gbp_name
-        }
-        else -> {
-            R.string.jpy_name
-        }
+        "USD" -> R.string.usd_name
+        "IDR" -> R.string.idr_name
+        "EUR" -> R.string.eur_name
+        "GBP" -> R.string.gbp_name
+        else -> R.string.jpy_name
     }
 }
 

@@ -20,7 +20,6 @@ class IDR : Currency(
         "GBP" to R.drawable.idr_gbp,
         "JPY" to R.drawable.idr_jpy
     )
-
 ) {
     override fun convert(amount: Double, toCurrency: String): Double {
         val conversionRate = conversionRates[toCurrency]
