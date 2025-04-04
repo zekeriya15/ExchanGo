@@ -17,6 +17,11 @@
     <string name="amount">Amount</string>
     <string name="convert">Convert</string>
     <string name="share">Share</string>
+    <string name="about">About</string>
+    <string name="copyright">ExchanGo is a simple currency converter app that support 5 currencies such as US Dollar ($), Indonesian Rupiah (Rp),
+        European Euro (€), British Pound (£), and Japanese Yen (¥). The result of the converted currency can be shared to various messaging
+        apps.\n\nCopyright © Muhamad Dzikriansyah 2024-2025.\nAll rights reserved.</string>
+
     <string name="sharing_template" translatable="false">ExchanG0 - Currency Converter\n\n(%1$s) %2$s %3$s = (%4$s) %5$s %6$s\n\n
     %7$s %8$s = %9$s %10$s\n%11$s %12$s = %12$s %14$s</string>
     <string name="invalid_input">Amount cannot be empty or 0</string>

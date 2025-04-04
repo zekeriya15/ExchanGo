@@ -19,4 +19,6 @@
     <string name="convert">Hitung</string>
     <string name="share">Bagikan</string>
     <string name="invalid_input">Jumlah tidak dapat kosong atau 0</string>
+    <string name="about">Tentang</string>
+    <string name="copyright">ExchanGo adalah sebuah aplikasi converter mata uang simpel yang mendukung 5 mata uang seperti Dollar AS ($), Rupiah Indonesia (Rp), Euro Eropa (€), Pound Inggris (£), dan Yen Jepang (¥). Hasil dari konversi mata uang dapat dibagikan ke berbagai aplikasi perpesanan.\\n\\nCopyright © Muhamad Dzikriansyah 2024-2025.\\nAll rights reserved.</string>
 </resources>
