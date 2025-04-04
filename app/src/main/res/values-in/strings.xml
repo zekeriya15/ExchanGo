@@ -18,8 +18,9 @@
     <string name="amount">Jumlah</string>
     <string name="convert">Hitung</string>
     <string name="share">Bagikan</string>
+    <string name="sharing_template">ExchanGo - Konverter Mata Uang\\n\\n%1$s %2$s = %3$s %4$s\\n\\n1 %5$s = %6$s %7$s         \\n1 %8$s = %9$s %10$s</string>
     <string name="invalid_input">Jumlah tidak dapat kosong atau 0</string>
     <string name="about">Tentang</string>
     <string name="back">Kembali</string>
-    <string name="copyright">ExchanGo adalah sebuah aplikasi converter mata uang simpel yang mendukung 5 mata uang seperti Dollar AS ($), Rupiah Indonesia (Rp), Euro Eropa (€), Pound Inggris (£), dan Yen Jepang (¥). Hasil dari konversi mata uang dapat dibagikan ke berbagai aplikasi perpesanan.\\n\\nCopyright © Muhamad Dzikriansyah 2024-2025.\\nAll rights reserved.</string>
+    <string name="copyright">ExchanGo adalah sebuah aplikasi konverter mata uang simpel yang mendukung 5 mata uang seperti Dollar AS ($), Rupiah Indonesia (Rp), Euro Eropa (€), Pound Inggris (£), dan Yen Jepang (¥). Hasil dari konversi mata uang dapat dibagikan ke berbagai aplikasi perpesanan.\\n\\nCopyright © Muhamad Dzikriansyah 2024-2025.\\nAll rights reserved.</string>
 </resources>

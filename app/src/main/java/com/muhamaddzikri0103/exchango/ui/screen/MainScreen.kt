@@ -1,5 +1,7 @@
 package com.muhamaddzikri0103.exchango.ui.screen
 
+import android.content.Context
+import android.content.Intent
 import android.content.res.Configuration
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
@@ -37,6 +39,7 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -121,7 +124,7 @@ fun ScreenContent(modifier: Modifier = Modifier) {
     var isFromExpanded by rememberSaveable { mutableStateOf(false) }
     var isToExpanded by rememberSaveable { mutableStateOf(false) }
 
-//    val context = LocalContext.current
+    val context = LocalContext.current
 
     Column(
         modifier = modifier
@@ -163,7 +166,7 @@ fun ScreenContent(modifier: Modifier = Modifier) {
                 modifier = Modifier.fillMaxWidth()
             ) {
                 currencies.keys.forEach { currencyCode ->
-                    if (currencyCode == toCurrency) return@forEach
+                    if (currencyCode == fromCurrency) return@forEach
                     DropdownMenuItem(
                         modifier = Modifier.fillMaxWidth(),
                         text = { Text(text = stringResource(getStringResId(currencyCode))) },
@@ -200,7 +203,7 @@ fun ScreenContent(modifier: Modifier = Modifier) {
                 modifier = Modifier.fillMaxWidth()
             ) {
                 currencies.keys.forEach { currencyCode ->
-                    if (currencyCode == fromCurrency) return@forEach
+                    if (currencyCode == toCurrency) return@forEach
                     DropdownMenuItem(
                         modifier = Modifier.fillMaxWidth(),
                         text = { Text(text = stringResource(getStringResId(currencyCode))) },
@@ -300,13 +303,41 @@ fun ScreenContent(modifier: Modifier = Modifier) {
                 )
             }
             Button(
-                onClick = {},
+                onClick = {
+                    val conv = currencies[toCurrency]!!.name
+
+                    val amountCurrName = context.getString(selectedCurrency.name)
+                    val amountSelectedCurr = formatNumber(displayAmount.toDoubleOrNull() ?: 0.0)
+                    val resultConvName = context.getString(conv)
+                    val resultConv = formatNumber(convertedAmount)
+                    val selectedCurrCode = currencies[convFromCurrency]?.code
+                    val baseSelectedCurr = currencies[convFromCurrency]?.conversionRates?.get(convToCurrency)?.let { formatNumber(it) }
+                    val resultConvCode = currencies[convToCurrency]?.code
+                    val baseResultConv = currencies[convToCurrency]?.conversionRates?.get(convFromCurrency)?.let { formatNumber(it) }
+
+                    shareData(
+                        context = context,
+                        message = context.getString(
+                            R.string.sharing_template,
+                            amountSelectedCurr,
+                            amountCurrName,
+                            resultConv,
+                            resultConvName,
+                            ///////////////
+                            selectedCurrCode,
+                            baseSelectedCurr,
+                            resultConvCode,
+                            resultConvCode,
+                            baseResultConv,
+                            selectedCurrCode,
+                        )
+                    )
+                },
                 modifier = Modifier.fillMaxWidth(0.4f).padding(top = 8.dp),
                 contentPadding = PaddingValues(8.dp)
             ) {
                 Text(text = stringResource(R.string.share))
             }
-
         }
     }
 }
@@ -320,7 +351,7 @@ fun IconPicker(isError: Boolean, unit: String) {
     }
 }
 
-fun getStringResId(currencyCode: String): Int {
+private fun getStringResId(currencyCode: String): Int {
     return when (currencyCode) {
         "USD" -> {
             R.string.usd
@@ -340,7 +371,7 @@ fun getStringResId(currencyCode: String): Int {
     }
 }
 
-fun getCurrName(currencyCode: String): Int {
+private fun getCurrName(currencyCode: String): Int {
     return when (currencyCode) {
         "USD" -> {
             R.string.usd_name
@@ -360,10 +391,20 @@ fun getCurrName(currencyCode: String): Int {
     }
 }
 
-fun formatNumber(amount: Double): String {
+private fun formatNumber(amount: Double): String {
     val pattern = if (amount <= 1) "#,###.######" else "#,###.##"
     val formatter = DecimalFormat(pattern)
     return formatter.format(amount)
+}
+
+private fun shareData(context: Context, message: String) {
+    val shareIntent = Intent(Intent.ACTION_SEND).apply {
+        type = "text/plain"
+        putExtra(Intent.EXTRA_TEXT, message)
+    }
+    if (shareIntent.resolveActivity(context.packageManager) != null) {
+        context.startActivity(shareIntent)
+    }
 }
 
 @Preview(showBackground = true)
