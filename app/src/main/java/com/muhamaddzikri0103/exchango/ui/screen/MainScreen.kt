@@ -1,7 +1,6 @@
 package com.muhamaddzikri0103.exchango.ui.screen
 
 import android.content.res.Configuration
-import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -87,7 +86,7 @@ fun ScreenContent(modifier: Modifier = Modifier) {
     var fromCurrency by remember { mutableStateOf(selectedCurrency.code) }
     var toCurrency by remember { mutableStateOf("EUR") }
 
-    var convCurrencyName by remember { mutableStateOf(selectedCurrency.name) }
+    var convCurrencyName by remember { mutableIntStateOf(selectedCurrency.name) }
     var convFromCurrency by remember { mutableStateOf(fromCurrency) }
     var convToCurrency by remember { mutableStateOf(toCurrency) }
     var displayAmount by remember { mutableStateOf("0") }
